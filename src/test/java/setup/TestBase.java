@@ -36,4 +36,5 @@ public class TestBase {
         driver.quit();
         logger.info("Webdriver closed");
     }
+
 }
