@@ -25,8 +25,8 @@ public class AutocompleteTests extends TestBase {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         WebElement searchField = driver.findElement(By.cssSelector("#search"));
         searchField.sendKeys("a");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='ui-id-1']")));
-        List<WebElement> dropdownResults = driver.findElements(By.cssSelector("li[class='ui-menu-item']"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='ui-id-1']")));
+        List<WebElement> dropdownResults = driver.findElements(By.cssSelector("*[class='ui-menu-item']"));
         for(WebElement row : dropdownResults){
             System.out.println(row.getText());
         }
@@ -35,8 +35,6 @@ public class AutocompleteTests extends TestBase {
         WebElement randomResult =  dropdownResults.get(randomResultIndex);
         String randomResultText = randomResult.getText();
         randomResult.click();
-        String searchFieldText = searchField.getText();
-
         assertThat("Displayed value equals chosen value", randomResultText, equalTo(searchField.getAttribute("value")));
     }
 

@@ -6,29 +6,38 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestBase {
-    private static Logger logger= LoggerFactory.getLogger(TestBase.class);
-    public WebDriver driver;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
+public class TestBase {
+    private static final Logger logger= LoggerFactory.getLogger(TestBase.class);
+    public WebDriver driver;
+    private static final String downloadDir = Paths.get("src/main/downloads").toAbsolutePath().toString();
+
+    public static String getDownloadDir(){
+        return downloadDir;
+    }
     @BeforeAll
     static void setupDriver() {
         WebDriverManager.chromedriver().setup();
         logger.info("Webdriver started successfully");
-    }
 
-    public WebDriver getDriver() {
-        return driver;
     }
 
     @BeforeEach
     void setupStart() {
-        driver = new ChromeDriver();
-        logger.info("Open browser");
-        driver.manage().window().maximize();
+        HashMap<String, Object> chromePrefs = new HashMap<>();
+        chromePrefs.put("download.default_directory", downloadDir);
+        ChromeOptions options = new ChromeOptions();
+        options.setExperimentalOption("prefs", chromePrefs);
+        options.addArguments("start-maximized");
         logger.info("Window maximized");
+        driver = new ChromeDriver(options);
+        logger.info("Open browser");
     }
 
     @AfterEach

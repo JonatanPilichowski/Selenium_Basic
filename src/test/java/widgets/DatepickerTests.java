@@ -19,7 +19,7 @@ import java.util.Random;
 
 
 public class DatepickerTests extends TestBase {
-    private static Logger logger = LoggerFactory.getLogger(DatepickerTests.class);
+    private static final Logger logger = LoggerFactory.getLogger(DatepickerTests.class);
 
     @Test
     @DisplayName("Date picker test")
@@ -30,57 +30,47 @@ public class DatepickerTests extends TestBase {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement datepicker = driver.findElement(By.id("datepicker"));
         clickOnBtnWithWait(wait, datepicker);
-        WebElement currentDayParent = driver.findElement(By.cssSelector("tr td[class*='ui-datepicker-today']"));
-        WebElement currentDay = currentDayParent.findElement(By.cssSelector("a[class*='highlight']"));
-        String expectedDate = getDateFrom(currentDayParent, currentDay);
-        currentDayParent.click();
+        WebElement currentDay = driver.findElement(By.cssSelector("td[class*='ui-datepicker-today']"));
+        String expectedDate = getDateFrom(currentDay);
+        currentDay.click();
         String actualDate = datepicker.getAttribute("value");
         softly.assertThat(actualDate).isEqualTo(expectedDate);
         logger.info("Selected today's date.");
-
         clickOnBtnWithWait(wait, datepicker);
-        WebElement nextMonth = driver.findElement(By.xpath("//*[contains(@class, 'ui-datepicker-next ui-corner-all')]//span"));
+        WebElement nextMonth = driver.findElement(By.cssSelector("span[class='ui-icon ui-icon-circle-triangle-e']"));
         nextMonth.click();
-        WebElement firstDayOfMonth = driver.findElement(By.xpath("//*[@data-handler='selectDay' and not(@class=' ui-datepicker-other-month ')]/a[.='1']"));
-        WebElement firstDayOfMonthParent = driver.findElement(By.xpath("//*[@data-handler='selectDay' and not(@class=' ui-datepicker-other-month ')]/a[.='1']/parent::td"));
-        expectedDate = getDateFrom(firstDayOfMonthParent, firstDayOfMonth);
+        WebElement firstDayOfMonth = driver.findElement(By.xpath("//*[@data-handler='selectDay' and not(@class=' ui-datepicker-other-month ')]/a[.='1']/parent::td"));
+        expectedDate = getDateFrom(firstDayOfMonth);
         firstDayOfMonth.click();
         actualDate = datepicker.getAttribute("value");
         softly.assertThat(actualDate).isEqualTo(expectedDate);
         logger.info("Moved to next month and clicked first day of it.");
-
         clickOnBtnWithWait(wait, datepicker);
         changeMonthForwardUntilReach("January");
-        WebElement lastDayOfJanuary = driver.findElement(By.xpath("//*[@data-handler='selectDay'][@data-month='0']/a[.='31']"));
-        WebElement lastDayOfJanuaryParent = driver.findElement(By.xpath("//*[@data-handler='selectDay'][@data-month='0']/a[.='31']/parent::td"));
-        expectedDate = getDateFrom(lastDayOfJanuaryParent, lastDayOfJanuary);
-        lastDayOfJanuaryParent.click();
+        WebElement lastDayOfJanuary = driver.findElement(By.xpath("//*[@data-handler='selectDay'][@data-month='0']/a[.='31']/parent::td"));
+        expectedDate = getDateFrom(lastDayOfJanuary);
+        lastDayOfJanuary.click();
         actualDate = datepicker.getAttribute("value");
         softly.assertThat(actualDate).isEqualTo(expectedDate);
         logger.info("Moved to 31 of January next year and clicked it.");
-
         clickOnBtnWithWait(wait, datepicker);
-        WebElement selectedDayParent = driver.findElement(By.cssSelector("tr td[class*='ui-datepicker-current-day']"));
-        WebElement selectedDay = selectedDayParent.findElement(By.cssSelector("*[class*='ui-state-default ui-state-active']"));
-        expectedDate = getDateFrom(selectedDayParent, selectedDay);
-        selectedDayParent.click();
+        WebElement selectedDay = driver.findElement(By.cssSelector("td[class*='ui-datepicker-current-day']"));
+        expectedDate = getDateFrom(selectedDay);
+        selectedDay.click();
         actualDate = datepicker.getAttribute("value");
         softly.assertThat(actualDate).isEqualTo(expectedDate);
         logger.info("Selected again the same day - 31.01 next year.");
-
         clickOnBtnWithWait(wait, datepicker);
         WebElement prevMonth = driver.findElement(By.xpath("//*[contains(@class, 'ui-datepicker-prev ui-corner-all')]//span"));
         prevMonth.click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ui-datepicker-div")));
         clickAndCheckRandomDay(softly);
         logger.info("Selected random day from previous month.");
-
         clickOnBtnWithWait(wait, datepicker);
         moveBackNumberOfYears(1);
         moveBackwardToRandomMonth();
         clickAndCheckRandomDay(softly);
         logger.info("Selected random day from previous year.");
-
         softly.assertAll();
     }
 
@@ -93,13 +83,11 @@ public class DatepickerTests extends TestBase {
     private void clickAndCheckRandomDay(SoftAssertions softAssert) {
         String actualDate;
         String expectedDate;
-
         WebElement datepicker = driver.findElement(By.id("datepicker"));
         List<WebElement> daysInTheMonth = driver.findElements(By.xpath("//*[@data-handler='selectDay' and not(contains(@class,'ui-datepicker-other-month'))]"));
-        WebElement randomDayParent = getRandomDay(daysInTheMonth);
-        WebElement randomDay = randomDayParent.findElement(By.xpath("./child::a"));
-        expectedDate = getDateFrom(randomDayParent, randomDay);
-        randomDayParent.click();
+        WebElement randomDay = getRandomDay(daysInTheMonth);
+        expectedDate = getDateFrom(randomDay);
+        randomDay.click();
         actualDate = datepicker.getAttribute("value");
         softAssert.assertThat(actualDate).isEqualTo(expectedDate);
     }
@@ -152,28 +140,14 @@ public class DatepickerTests extends TestBase {
         while (!Objects.equals(currMonthText, month));
     }
 
-    private void changeMonthBackwardUntilReach(String month) {
-        String currMonthText;
-        do {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class, 'ui-datepicker-prev ui-corner-all')]//span")));
-            WebElement prevMonthBtn = driver.findElement(By.xpath("//*[contains(@class, 'ui-datepicker-prev ui-corner-all')]//span"));
-            prevMonthBtn.click();
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='ui-datepicker-title']//span[@class='ui-datepicker-month']")));
-            WebElement currMonth = driver.findElement(By.xpath("//div[@class='ui-datepicker-title']//span[@class='ui-datepicker-month']"));
-            currMonthText = currMonth.getText();
-        }
-        while (!Objects.equals(currMonthText, month));
-    }
+    private String getDateFrom(WebElement dayElement) {
 
-    private String getDateFrom(WebElement currDayParent, WebElement currDay) {
-
-        String monthIndex = currDayParent.getAttribute("data-month");
+        String monthIndex = dayElement.getAttribute("data-month");
         String monthValue = String.valueOf(Integer.parseInt(monthIndex) + 1);
         String month = (Integer.parseInt(monthValue) > 9 ? monthValue : "0" + monthValue);
-        String dayValue = currDay.getText();
+        String dayValue = dayElement.getText();
         String day = (Integer.parseInt(dayValue) > 9 ? dayValue : "0" + dayValue);
-        String year = currDayParent.getAttribute("data-year");
+        String year = dayElement.getAttribute("data-year");
 
         return month + "/" + day + "/" + year;
     }

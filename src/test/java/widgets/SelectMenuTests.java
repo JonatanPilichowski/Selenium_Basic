@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import setup.TestBase;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -21,7 +19,6 @@ public class SelectMenuTests extends TestBase {
     @Tag("selectable")
     public void selectFromDropdown() {
         driver.get("http://51.75.61.161:9102/selectmenu.php");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         selectRandomSpeed();
         selectFileByText("ui.jQuery.js");
         selectNumberByIndex(12);

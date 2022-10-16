@@ -2,7 +2,6 @@ package interactions;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import setup.TestBase;
@@ -29,7 +28,7 @@ public class SortableTests extends TestBase {
 
         Actions actions = new Actions(driver);
         for (int i = 0; i < elementsShuffled.size(); i++) {
-            WebElement elementByOrder = driver.findElement(By.xpath("//*[@id='sortable']//li["+(i+1)+"]"));
+            WebElement elementByOrder = driver.findElement(By.xpath("//*[@id='sortable']//li[" + (i + 1) + "]"));
             actions.dragAndDrop(elementsShuffled.get(i), elementByOrder).perform();
         }
 

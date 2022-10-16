@@ -11,7 +11,6 @@ import org.openqa.selenium.interactions.Actions;
 import setup.TestBase;
 
 public class ResizableTests extends TestBase {
-    private final int decreasedValueOfClick = 18;
 
     @Test
     @DisplayName("Resize widow few times")
@@ -25,12 +24,12 @@ public class ResizableTests extends TestBase {
         WebElement resizeBtn = driver.findElement(By.cssSelector("div[class*='ui-icon-gripsmall-diagonal-se']"));
         SoftAssertions softly = new SoftAssertions();
         Actions actions = new Actions(driver);
-        actions.dragAndDropBy(resizeBtn, resizeByPixels+decreasedValueOfClick, 0).perform();
+        actions.dragAndDropBy(resizeBtn, resizeByPixels, 0).perform();
         softly.assertThat(getResFieldSize().getWidth()).isEqualTo(getExpectedWidth(resizeByPixels, resFieldSizeOriginal));
-        actions.dragAndDropBy(resizeBtn, 0, resizeByPixels+decreasedValueOfClick).perform();
+        actions.dragAndDropBy(resizeBtn, 0, resizeByPixels).perform();
         softly.assertThat(getResFieldSize().getHeight()).isEqualTo(getExpectedHeight(resizeByPixels, resFieldSizeOriginal));
-        Dimension  resFieldSizeCurr = resizableField.getSize();
-        actions.dragAndDropBy(resizeBtn, resizeByPixels+decreasedValueOfClick, resizeByPixels+decreasedValueOfClick).perform();
+        Dimension resFieldSizeCurr = resizableField.getSize();
+        actions.dragAndDropBy(resizeBtn, resizeByPixels, resizeByPixels).perform();
         softly.assertThat(getResFieldSize()).isEqualTo(new Dimension(getExpectedWidth(resizeByPixels, resFieldSizeCurr), getExpectedHeight(resizeByPixels, resFieldSizeCurr)));
         softly.assertAll();
     }

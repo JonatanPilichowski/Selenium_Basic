@@ -20,7 +20,7 @@ public class WindowsTests extends TestBase {
     @DisplayName("Windows/Tabs test")
     @Tag("window")
     @Tag("tab")
-    public void windowsTest(){
+    public void windowsTest() {
         driver.get("http://51.75.61.161:9102/windows-tabs.php");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         String parentWindow = driver.getWindowHandle();
@@ -49,8 +49,8 @@ public class WindowsTests extends TestBase {
 
     private void moveToNewWindow(WebDriverWait waitValue, String parentWindow) {
         waitValue.until(numberOfWindowsToBe(2));
-        for(String winHandle : driver.getWindowHandles()) {
-            if(!parentWindow.contentEquals(winHandle)) {
+        for (String winHandle : driver.getWindowHandles()) {
+            if (!parentWindow.contentEquals(winHandle)) {
                 driver.switchTo().window(winHandle);
                 break;
             }

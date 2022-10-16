@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
 import setup.TestBase;
 
 import java.util.List;
@@ -23,10 +22,11 @@ public class IFrameTests extends TestBase {
         firstNameInput.sendKeys("Janusz");
         WebElement lastNameInput = driver.findElement(By.cssSelector("#inputSurname3"));
         lastNameInput.sendKeys("Tracz");
-        WebElement signInBtn = driver.findElement(By.xpath("//button[@class='btn btn-primary']"));
+        WebElement signInBtnFrame1 = driver.findElement(By.xpath("//button[@class='btn btn-primary']"));
+        signInBtnFrame1.click();
         driver.switchTo().defaultContent();
-        driver.switchTo().frame("iframe2");
 
+        driver.switchTo().frame("iframe2");
         WebElement loginInput = driver.findElement(By.cssSelector("#inputLogin"));
         loginInput.sendKeys("jtracz999");
         WebElement passwordInput = driver.findElement(By.cssSelector("#inputPassword"));
@@ -37,6 +37,8 @@ public class IFrameTests extends TestBase {
         clickOnRandomElementFromList(continents);
         List<WebElement> yearsOfExperience = driver.findElements(By.cssSelector("input[name='gridRadios']"));
         clickOnRandomElementFromList(yearsOfExperience);
+        WebElement signInBtnFrame2 = driver.findElement(By.xpath("//button[@class='btn btn-primary']"));
+        signInBtnFrame2.click();
         driver.switchTo().defaultContent();
         WebElement basicDropdownMenu = driver.findElement(By.xpath("//li[@class='nav-ite dropdown']"));
         Actions action = new Actions(driver);
