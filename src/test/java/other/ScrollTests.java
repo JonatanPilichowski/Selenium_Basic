@@ -21,14 +21,11 @@ public class ScrollTests extends TestBase {
     public void scrollUntil(){
         driver.get("http://51.75.61.161:9102/high-site.php");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
         while(driver.findElements(By.cssSelector("#scroll-button")).size() == 0){
             Actions action = new Actions(driver);
             action.scrollByAmount(0,driver.manage().window().getSize().getHeight()/2).perform();
         }
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("scroll-button")));
-            WebElement submitBtn = driver.findElement(By.id("scroll-button"));
-        System.out.println(submitBtn.getText());
         File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         try {
             String fileName = new Date().getTime() + "_screenshot.png";
